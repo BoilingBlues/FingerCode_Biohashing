@@ -1,4 +1,8 @@
 result*
 fingercode/__pycache__
 biohashing/__pycache__
+GUI/__pycache__
 test_result
+server/configs/*
+server/storage/logs/*
+server/fingerServer.exe
