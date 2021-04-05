@@ -33,11 +33,12 @@ def cal_standar(points, mean):
     else:
         return 0
 
-def fingercode(img):
+def fingercode(path):
     #img = pre.delete_gasuss_noise(img)
     # img = pre.connect(img)
     # img = pre.open_close(img)
     #rows,cols = img.shape[:2]
+    img = cv.imread(path,0)
     core_x,core_y = centerpoint.GetCentralPoint(img)
     print(core_x,core_y)
     if core_x != 0:

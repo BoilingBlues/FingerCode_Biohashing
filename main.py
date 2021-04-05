@@ -4,7 +4,7 @@ from biohashing import BioCode
 from cv2 import cv2 as cv
 import datetime
 import os
-
+from GUI import multiple_page
 def traverseFingerDB():
     # preTime = datetime.datetime.now()
     # image = cv.imread("/mnt/e/graduation_design/fingerprint_database/DB1_B/101_4.tif",0)
@@ -29,9 +29,8 @@ def traverseFingerDB():
     images = [x for x in files]
     finger = []
     for i in images:
-        img = cv.imread(path+i,0)
         preTime = datetime.datetime.now()
-        finger.append(fingercode.fingercode(img))
+        finger.append(fingercode.fingercode(path+i))
         print(datetime.datetime.now()-preTime,"总用时")
     for i in range(80):
         if finger[i]==None:
@@ -47,9 +46,13 @@ def traverseFingerDB():
                     print(images[i],images[j],result)
 
 def extractOne(path):
-    img = cv.imread(path,0)
-    finger = fingercode.fingercode(img)
-    return finger
+    finger = fingercode.fingercode(path)
+    finger = BioCode.BioCode(123456,finger)
+    result = ""
+    for i in finger:
+        for j in i:
+            result += str(j)
+    return result
 
 def traverseFingerDBByBioHashing(seed):
     path = "/mnt/e/code/github/test/fingercode-master/1/"
@@ -57,9 +60,8 @@ def traverseFingerDBByBioHashing(seed):
     images = [x for x in files]
     finger = []
     for i in images:
-        img = cv.imread(path+i,0)
         preTime = datetime.datetime.now()
-        finger.append(fingercode.fingercode(img))
+        finger.append(fingercode.fingercode(path+i))
         print(datetime.datetime.now()-preTime,"总用时")
     for i in range(80):
         if finger[i]==None:
@@ -74,14 +76,8 @@ def traverseFingerDBByBioHashing(seed):
                     if result<145:
                         print(images[i],images[j],result)
 
+
+
 if __name__=="__main__":
-    seed = 123455
-    # finger1 = extractOne("/mnt/e/code/github/test/fingercode-master/1/102_1.tif")
-    # finger2 = extractOne("/mnt/e/code/github/test/fingercode-master/1/102_3.tif")
-    # finger3 = extractOne("/mnt/e/code/github/test/fingercode-master/1/104_7.tif")
-    # fingerBio1 = BioCode.BioCode(seed,finger1)
-    # fingerBio2 = BioCode.BioCode(seed,finger2)
-    # fingerBio3 = BioCode.BioCode(seed,finger3)
-    # print(dist.HammingDistance(fingerBio1,fingerBio2))
-    # print(dist.HammingDistance(fingerBio1,fingerBio3))
-    traverseFingerDBByBioHashing(seed)
+    app = multiple_page.Application()
+    app.mainloop()
