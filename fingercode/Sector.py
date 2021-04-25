@@ -43,7 +43,7 @@ def cal_variance(points, mean):
 def DivideSector_PRE():
     '''划分扇区'''
     #计算图像的中间点
-    rows, cols = 150,150
+    rows, cols = 100,100
     k = 16
     b = 10
     T = []

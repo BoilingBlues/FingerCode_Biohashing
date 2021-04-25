@@ -4,6 +4,7 @@ from . import interactive
 from . import const
 # import bcrypt
 import hashlib
+import tkinter.font as tkFont
 
 class ControlForm(tk.Frame):
     '''
@@ -20,9 +21,9 @@ class ControlForm(tk.Frame):
         self.show_frame(Authentication)
 
     def show_frame(self,cont):
+        self.frames[cont].tkraise()
         if cont==Logs:
             self.frames[cont].refresh()
-        self.frames[cont].tkraise()
 
 class Authentication(tk.Frame):
     '''
@@ -30,18 +31,15 @@ class Authentication(tk.Frame):
     '''
     def __init__(self,parent,root):
         super().__init__(parent)
-        self.fileNameEntry = tk.Entry(self,textvariable="")
-        self.fileNameEntry.pack()
-        tk.Button(self,text="打开文件",command=self.selectFile).pack()
-        tk.Button(self,text="认证指纹",command= lambda: self.authentication(123456,root)).pack()
+        self.seedEntry = tk.Entry(self)
+        self.seedEntry.pack()
+        tk.Button(self,text="认证指纹",command= lambda: self.authentication(root)).pack()
         
-    def selectFile(self):
-        fileName = askopenfilename(filetypes=[("TIF",".tif")])
-        self.fileNameEntry.delete(0,'end')
-        self.fileNameEntry.insert(0,fileName)
-    def authentication(self,seed,root):
-        filename = self.fileNameEntry.get()
-        result = interactive.ExtractOne(seed,filename)
+    def authentication(self,root):
+        seed = self.seedEntry.get()
+        seed = int(seed)
+        img = interactive.GetIMG()
+        result = interactive.ExtractOne(seed,img)
         if result== const.CONST.FileInvalid:
             tk.messagebox.showinfo("提示","指纹无效")
         else:
@@ -60,6 +58,7 @@ class Logs(tk.Frame):
         super().__init__(parent)
         self.root=root
         self.page = 1
+        self.parent = parent
         self.text = tk.Text(self,width=60,height=21)
         #self.text['state'] = 'disabled'
         self.text.bind("<Key>", lambda a: "break")
@@ -81,6 +80,8 @@ class Logs(tk.Frame):
 
         if root.token=="":
             tk.messagebox.showinfo("提示","请先身份验证")
+            self.parent.show_frame(Authentication)
+            return
         result = interactive.GetLog(root.token,page-1)
         if result==const.CONST.LogField:
             tk.messagebox.showinfo("提示","获取失败")
@@ -103,20 +104,34 @@ class Update(tk.Frame):
     '''
     def __init__(self,parent,root):
         super().__init__(parent)
-        self.fileNameEntry = tk.Entry(self,textvariable="")
-        self.fileNameEntry.pack()
-        tk.Button(self,text="打开文件",command=self.selectFile).pack()
-        self.password = tk.Entry(self,bd=5)
-        self.password.pack()
-        tk.Button(self,text="更新指纹",command= lambda: self.update(123456,root)).pack()
+        titleFont = tkFont.Font(family='Fixdsys',size=20,weight=tkFont.BOLD)
+        titleLabel = tk.Label(self,text="指纹更新",font=titleFont)
+        titleLabel.place(relheight=0.2,relwidth=0.5,relx=0.25,rely=0)
+        #self.fileNameEntry = tk.Entry(self,textvariable="")
+        #self.fileNameEntry.place(relheight=0.1,relwidth=0.5,relx=0.25,rely=0.2)
+        #selectFileButton = tk.Button(self,text="选择文件",command=self.selectFile)
+        #selectFileButton.place(relheight=0.1,relwidth=0.2,relx=0.75,rely=0.2)
+        self.seed = tk.Entry(self,bd=2)
+        self.seed.place(relheight=0.1,relwidth=0.5,relx=0.25,rely=0.4)
+        seedLabel = tk.Label(self,text="请输入口令")
+        seedLabel.place(relheight=0.05,relwidth=0.5,relx=0.25,rely=0.5)
+        self.password = tk.Entry(self,bd=2,show="*")
+        self.password.place(relheight=0.1,relwidth=0.5,relx=0.25,rely=0.6)
+        passwordLabel = tk.Label(self,text="请输入用户密码")
+        passwordLabel.place(relheight=0.05,relwidth=0.5,relx=0.25,rely=0.7)
+        updateButton = tk.Button(self,text="更新指纹",command= lambda: self.update(root))
+        updateButton.place(relheight=0.1,relwidth=0.2,relx=0.4,rely=0.8)
         
-    def selectFile(self):
-        fileName = askopenfilename(filetypes=[("TIF",".tif")])
-        self.fileNameEntry.delete(0,'end')
-        self.fileNameEntry.insert(0,fileName)
+    # def selectFile(self):
+    #     fileName = askopenfilename(filetypes=[("TIF",".tif")])
+    #     self.fileNameEntry.delete(0,'end')
+    #     self.fileNameEntry.insert(0,fileName)
 
-    def update(self,seed,root):
-        fileName = self.fileNameEntry.get()
+    def update(self,root):
+        #fileName = self.fileNameEntry.get()
+        seed = self.seed.get()
+        seed = int(seed)
+        img = interactive.GetIMG()
         username = root.username
         password = self.password.get()
         password = password.encode("utf-8")
@@ -125,7 +140,7 @@ class Update(tk.Frame):
         password = h.hexdigest()
         # salt = bcrypt.gensalt()
         # hashed = bcrypt.hashpw(password,salt)
-        result = interactive.ExtractOne(seed,fileName)
+        result = interactive.ExtractOne(seed,img)
         if result == const.CONST.FileInvalid:
             tk.messagebox.showinfo("提示","指纹无效")
         else:

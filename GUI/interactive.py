@@ -5,7 +5,11 @@ import sys
 sys.path.append("..")
 from fingercode import fingercode
 from biohashing import BioCode
-root_path = "http://192.168.80.1:8080"
+import ctypes
+import numpy as np
+from cv2 import cv2 as cv
+
+root_path = "http://172.20.48.1:8080"
 regist_path = root_path + "/regist"
 login_path = root_path + "/login"
 changePassword_path = root_path + "/changePassword"
@@ -91,9 +95,9 @@ def GetLog(token,page):
             return result["list"]
 
 
-def ExtractOne(seed,path):
+def ExtractOne(seed,img):
     try:
-        finger = fingercode.fingercode(path)
+        finger = fingercode.fingercode(img)
         finger = BioCode.BioCode(seed,finger)
         result = ""
         for i in finger:
@@ -104,6 +108,13 @@ def ExtractOne(seed,path):
         return const.CONST.FileInvalid
 
 
+def GetIMG():
+    buffer = np.zeros([300*400],dtype=np.uint8)
+    dll = ctypes.cdll.LoadLibrary('./GUI/dll/finger_image_DLL.dll')
+    dll.GetIMG.argtypes = [np.ctypeslib.ndpointer(dtype=np.uint8,ndim=1,flags="C_CONTIGUOUS")]
+    dll.GetIMG(buffer)
+    img = buffer.reshape((400,300))
+    return img
 
 if __name__ == "__main__":
     print(Authenticat("12341","0001000110100011100100000101111111101011000010000011101010101011110110111100000000011100101000111100000011011111001111111010010001011100101000010111101111001010010111010011111010001000110101000001010111000011010011000100000000110010110110100101110100011110100010101001010000001101011100110100110101000000001110101001101001001101011111001100101010011100001011110111101101000100010010101011100000011110010010011110000001011010110111010010001001111111111100000000111010111000000111000100100111100001010110101101100110100110001111011011100100011001101110010001010000011001101000011101000000011001101001110000110110111001100010011111100010010111"))

@@ -2,6 +2,8 @@ from cv2 import cv2 as cv
 import numpy as np
 from . import walking
 
+width = 50
+
 # get the reference frame
 def GetCentralPoint(img):
     '''
@@ -12,7 +14,7 @@ def GetCentralPoint(img):
     if min(result['core'].shape)!=0:
         row,col = int(result['core'][0][0]),int(result['core'][0][1])
         if row != 0:
-            if (col + 75 < cols) & (row + 75 < rows)&(col-75>0)&(row-75>0):
+            if (col + width < cols) & (row + width < rows) & (col - width > 0) & (row - width > 0):
                 print("success")
                 return row,col
             else:
@@ -26,9 +28,8 @@ def GetCoreIMG(img, core_x, core_y):
     '''
         获得切分扇形区域图像
     '''
-    radius = 75
-    # crop the image 80*80
-    #core_img = np.zeros((radius, radius, 3), np.uint8)
+    radius = width
+
     core_img = img[core_y-radius:core_y+radius, core_x-radius:core_x+radius]
 
     return core_img
