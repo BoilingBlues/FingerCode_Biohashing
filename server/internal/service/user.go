@@ -6,6 +6,7 @@ import (
 	"fingerServer/internal/model"
 
 	"fingerServer/pkg/app"
+	"fingerServer/pkg/finger"
 )
 
 type UserLoginRequest struct {
@@ -74,13 +75,8 @@ func (svc *Service) UserAuthentication(param *UserAuthenticationRequest) (string
 		return "", errors.New("用户没有注册指纹")
 	}
 	b := []byte(b2)
-	count := 0
-	for i := 0; i < len(b); i++ {
-		if b1[i] != b[i] {
-			count++
-		}
-	}
-	if count > 130 {
+	result := finger.HammingDistance(b, b1)
+	if !result {
 		svc.dao.CreateLogByName(param.UserName, "认证失败")
 		return "", errors.New("指纹校验失败")
 	}

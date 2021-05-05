@@ -9,8 +9,3 @@ def RandomMatrix(seed,m,n):
 def Schmidt(A):
     a = linalg.orth(A)
     return a
-if __name__=="__main__":
-    pre = RandomMatrix(123,80,8)
-    print(pre)
-    be = Schmidt(pre)
-    print(be)

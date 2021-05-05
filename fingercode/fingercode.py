@@ -43,27 +43,18 @@ def fingercode(img):
     if core_x != 0:
         #img = cv.cvtColor(img,cv.COLOR_RGB2GRAY)
         #裁剪区域
-        preTime = datetime.datetime.now()
         core_img = centerpoint.GetCoreIMG(img,core_x,core_y)
-        print(datetime.datetime.now()-preTime,"裁剪区域")
 
 
         #划分扇区
-        preTime = datetime.datetime.now()
         sectors = Sector.DivideSector(core_img)
-        print(datetime.datetime.now()-preTime,"划分扇区")
 
         #归一化处理
-        preTime = datetime.datetime.now()
         core_img = Sector.NormalizeIMG(core_img,sectors)
-        print(datetime.datetime.now()-preTime,"归一化处理")
 
 
         #对特征区域进行8方向滤波
-        preTime = datetime.datetime.now()
         result = Gabor.GetGabor(core_img)
-        print(datetime.datetime.now()-preTime,"八方向滤波")
-        preTime = datetime.datetime.now()
         temp = []
 
         for i in result:
@@ -71,7 +62,6 @@ def fingercode(img):
             fingercodetemp = fingercode_unidirectional(i)
             temp.append(fingercodetemp)
         # convert tht array to string
-        print(datetime.datetime.now()-preTime,"特征提取")
         return temp
 
 

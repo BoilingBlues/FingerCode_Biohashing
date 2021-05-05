@@ -33,3 +33,7 @@ func (l Log) List(c *gin.Context) {
 	}
 	response.ToResponse(gin.H{"list": res})
 }
+func (l Log) Test(c *gin.Context) {
+	response := app.NewResponse(c)
+	response.ToResponse(gin.H{"list": "ok"})
+}

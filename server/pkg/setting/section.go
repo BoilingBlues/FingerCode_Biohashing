@@ -29,9 +29,10 @@ type DatabaseSettingS struct {
 	MaxOpenConns int
 }
 type AppSettingS struct {
-	LogSavePath string
-	LogFileName string
-	LogFileExt  string
+	LogSavePath     string
+	LogFileName     string
+	LogFileExt      string
+	FingerThreshold int
 }
 
 func (s *Setting) ReadSection(k string, v interface{}) error {

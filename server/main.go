@@ -22,7 +22,7 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
-func init() {
+func Init() {
 	err := setupSetting()
 	if err != nil {
 		log.Fatalf("init.SetupSetting err : %v", err)
@@ -42,6 +42,7 @@ func init() {
 }
 
 func main() {
+	Init()
 	gin.SetMode(global.ServerSetting.RunMode)
 	router := routers.NewRouter()
 	s := &http.Server{

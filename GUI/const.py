@@ -13,6 +13,10 @@ class CONST():
     NoMore = 2005
 
     FileInvalid = 3000
+
+    DeviceError = 4000
+
+    
     def __setattr__(self,*_):
         pass
 

@@ -11,7 +11,7 @@ class Application(tk.Tk):
     def __init__(self):
         #super函数用于调用父类的一个方法
         super().__init__()
-        self.wm_title("多页面切换程序")
+        self.wm_title("指纹认证系统")
         self.wm_geometry('800x500')
         self.username = ""
         self.token = ""

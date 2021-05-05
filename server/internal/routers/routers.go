@@ -28,6 +28,7 @@ func NewRouter() *gin.Engine {
 		api.POST("/authentication", user.Authentication)
 
 		api.POST("/logs", logs.List)
+		api.GET("/test", logs.Test)
 	}
 	return r
 }
